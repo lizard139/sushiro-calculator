@@ -1,0 +1,35 @@
+<!-- 设置页面（简化版，可按需扩展） -->
+<navigation-bar title="设置" back="{{true}}" color="black" background="#F7F3E9"></navigation-bar>
+
+<view class="settings-page">
+  <view class="settings-section">
+    <view class="settings-title">基础设置</view>
+    <view class="settings-row">
+      <text class="settings-label">税率 (%)</text>
+      <input class="settings-input" type="digit" placeholder="例如 0 或 10" value="{{taxRate}}" bindinput="onFieldChange" data-field="taxRate" />
+    </view>
+    <view class="settings-row">
+      <text class="settings-label">服务费 (%)</text>
+      <input class="settings-input" type="digit" placeholder="例如 0 或 10" value="{{serviceRate}}" bindinput="onFieldChange" data-field="serviceRate" />
+    </view>
+    <view class="settings-row">
+      <text class="settings-label">默认人数</text>
+      <input class="settings-input" type="number" placeholder="用于人均计算" value="{{defaultPeople}}" bindinput="onFieldChange" data-field="defaultPeople" />
+    </view>
+  </view>
+
+  <view class="settings-section">
+    <view class="settings-title">金额显示</view>
+    <view class="settings-row row-between" bindtap="onToggleRound">
+      <text class="settings-label">人均金额保留 1 位小数</text>
+      <switch checked="{{keepOneDecimal}}" />
+    </view>
+  </view>
+
+  <view class="settings-footer">
+    <button class="reset-btn" bindtap="onResetSettings">恢复默认设置</button>
+    <button class="save-btn" bindtap="onSave">保存设置</button>
+  </view>
+</view>
+
+

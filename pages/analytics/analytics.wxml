@@ -1,0 +1,74 @@
+<view class="page">
+  <view class="top-safe" style="height: {{headerSafeHeight}}px;"></view>
+  <view class="page-header">
+    <text class="page-title">消费分析</text>
+    <view class="range-tabs" role="tablist" aria-label="分析周期">
+      <view class="range-tab {{timeRange === 'week' ? 'active' : ''}}" bindtap="onChangeTimeRange" data-range="week">周</view>
+      <view class="range-tab {{timeRange === 'month' ? 'active' : ''}}" bindtap="onChangeTimeRange" data-range="month">月</view>
+      <view class="range-tab {{timeRange === 'year' ? 'active' : ''}}" bindtap="onChangeTimeRange" data-range="year">年</view>
+    </view>
+  </view>
+
+  <scroll-view class="content" style="height: {{contentHeight}}px;" scroll-y enhanced show-scrollbar="{{false}}" enable-back-to-top>
+    <view class="summary-panel">
+      <text class="summary-label">{{summaryTitle}}</text>
+      <text class="summary-amount number-font">¥{{summaryAmount}}</text>
+      <text class="summary-meta number-font">{{visitCount}} 次用餐 · 人均 ¥{{avgSpent}}</text>
+    </view>
+
+    <text class="section-heading">消费趋势</text>
+    <view class="chart-panel">
+      <view class="empty-state" wx:if="{{visitCount === 0}}">
+        <view class="empty-bars"><view class="empty-bar short"></view><view class="empty-bar tall"></view><view class="empty-bar medium"></view></view>
+        <text>当前周期暂无消费数据</text>
+      </view>
+      <view class="bar-chart" wx:else>
+        <view class="y-axis">
+          <text class="number-font" wx:for="{{yAxisLabels}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="chart-area">
+          <view class="bar-column" wx:for="{{trendData}}" wx:key="date">
+            <view class="bar-space">
+              <view class="bar" style="height: {{item.percentage}}%;">
+                <text class="bar-value number-font" wx:if="{{item.amount > 0}}">¥{{item.amount}}</text>
+              </view>
+            </view>
+            <text class="bar-label number-font">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <text class="section-heading preference-heading">碟子偏好</text>
+    <view class="preference-panel">
+      <block wx:if="{{plateData.length === 0}}">
+        <view class="empty-state preference-empty"><text>保存小票后即可查看偏好</text></view>
+      </block>
+      <block wx:else>
+        <view class="preference-row" wx:for="{{plateData}}" wx:key="label">
+          <view class="plate-disc" style="background-color: {{item.color}};"></view>
+          <view class="preference-copy">
+            <view class="preference-line">
+              <text class="plate-name">{{item.label}}</text>
+              <text class="plate-count number-font">{{item.count}}碟</text>
+            </view>
+            <view class="progress-track"><view class="progress-fill" style="width: {{item.percentage}}%;"></view></view>
+          </view>
+        </view>
+      </block>
+    </view>
+    <text class="section-heading">近期消费</text>
+    <view class="recent-list" wx:if="{{topRecords.length > 0}}">
+      <view class="recent-row" wx:for="{{topRecords}}" wx:key="id">
+        <view class="recent-copy">
+          <text class="recent-date">{{item.displayDate}}</text>
+          <text class="recent-meta number-font">{{item.plateCount}} 碟 · {{item.peopleLabel}}</text>
+        </view>
+        <text class="recent-amount number-font">¥{{item.totalAmount}}</text>
+      </view>
+    </view>
+    <view class="recent-empty" wx:else>结算并保存小票后，消费记录会显示在这里。</view>
+    <view class="content-spacer"></view>
+  </scroll-view>
+
+</view>

@@ -1,0 +1,10 @@
+.DS_Store
+project.private.config.json
+.cloudbase/
+.impeccable/
+node_modules/
+miniprogram_npm/
+.env
+.env.*
+!.env.example
+*.log

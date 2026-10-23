@@ -1,0 +1,26 @@
+<view class="tabs" role="tablist" aria-label="主要页面">
+  <view class="tab {{current === 'calculator' ? 'active' : ''}}" data-key="calculator" bindtap="onSelect" role="tab" aria-selected="{{current === 'calculator'}}">
+    <view class="tab-icon calculator-icon">
+      <view class="calc-dot"></view><view class="calc-dot"></view>
+      <view class="calc-dot"></view><view class="calc-dot"></view>
+      <view class="calc-dot"></view><view class="calc-dot"></view>
+    </view>
+    <text>计算</text>
+  </view>
+  <view class="tab {{current === 'history' ? 'active' : ''}}" data-key="history" bindtap="onSelect" role="tab" aria-selected="{{current === 'history'}}">
+    <view class="tab-icon receipt-icon">
+      <view class="receipt-line"></view>
+      <view class="receipt-line short"></view>
+      <view class="receipt-clock"></view>
+    </view>
+    <text>历史</text>
+  </view>
+  <view class="tab {{current === 'analytics' ? 'active' : ''}}" data-key="analytics" bindtap="onSelect" role="tab" aria-selected="{{current === 'analytics'}}">
+    <view class="tab-icon chart-icon">
+      <view class="chart-bar one"></view>
+      <view class="chart-bar two"></view>
+      <view class="chart-bar three"></view>
+    </view>
+    <text>分析</text>
+  </view>
+</view>

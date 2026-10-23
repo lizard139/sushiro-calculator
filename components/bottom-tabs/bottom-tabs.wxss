@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  flex: none;
+}
+
+.tabs {
+  height: 112rpx;
+  padding: 12rpx 56rpx max(12rpx, env(safe-area-inset-bottom));
+  background: #ffffff;
+  border-top: 1rpx solid #eceef1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-sizing: content-box;
+}
+
+.tab {
+  min-width: 120rpx;
+  min-height: 96rpx;
+  color: #8a8f98;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.tab.active {
+  color: #d71920;
+}
+
+.tab:active {
+  opacity: .62;
+}
+
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
+  position: relative;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.calculator-icon {
+  border: 4rpx solid currentColor;
+  border-radius: 9rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rpx;
+  padding: 6rpx;
+}
+
+.calc-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 2rpx;
+  background: currentColor;
+}
+
+.receipt-icon {
+  border: 4rpx solid currentColor;
+  border-radius: 6rpx;
+}
+
+.receipt-line {
+  position: absolute;
+  left: 7rpx;
+  top: 9rpx;
+  width: 19rpx;
+  height: 4rpx;
+  border-radius: 2rpx;
+  background: currentColor;
+}
+
+.receipt-line.short {
+  top: 20rpx;
+  width: 14rpx;
+}
+
+.receipt-clock {
+  position: absolute;
+  width: 17rpx;
+  height: 17rpx;
+  right: -8rpx;
+  bottom: -6rpx;
+  border: 4rpx solid currentColor;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.receipt-clock::after {
+  content: '';
+  position: absolute;
+  width: 2rpx;
+  height: 6rpx;
+  left: 7rpx;
+  top: 3rpx;
+  background: currentColor;
+  transform-origin: bottom;
+  transform: rotate(-35deg);
+}
+
+.chart-icon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.chart-bar {
+  width: 8rpx;
+  border-radius: 5rpx;
+  background: currentColor;
+}
+
+.chart-bar.one { height: 20rpx; }
+.chart-bar.two { height: 40rpx; }
+.chart-bar.three { height: 29rpx; }

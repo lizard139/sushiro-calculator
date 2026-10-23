@@ -1,0 +1,86 @@
+<view class="page">
+  <view class="top-safe" style="height: {{headerSafeHeight}}px;"></view>
+  <view class="page-header">
+    <text class="page-title">历史记录</text>
+    <view class="quiet-button" bindtap="onManage" role="button" aria-label="{{managing ? '完成管理' : '管理记录'}}">{{managing ? '完成' : '管理'}}</view>
+  </view>
+
+  <scroll-view class="content" scroll-y enhanced show-scrollbar="{{false}}" enable-back-to-top>
+    <view class="summary-panel">
+      <text class="summary-label">本月消费</text>
+      <text class="summary-amount number-font">¥{{monthSpent}}</text>
+      <text class="summary-meta number-font">{{monthCount}} 次用餐 · 共 {{monthPlates}} 碟</text>
+    </view>
+
+    <view class="list-heading-row">
+      <text class="section-heading">消费记录</text>
+      <text class="clear-all" wx:if="{{managing && history.length > 0}}" bindtap="onClearAll">清空全部</text>
+    </view>
+
+    <view class="empty-state" wx:if="{{history.length === 0}}">
+      <view class="empty-receipt"><view class="empty-line"></view><view class="empty-line"></view><view class="empty-line"></view></view>
+      <text class="empty-title">还没有消费记录</text>
+      <text class="empty-copy">在计算页结算并保存后，小票会出现在这里。</text>
+    </view>
+
+    <view class="record-list" wx:else>
+      <view class="record-row" wx:for="{{visibleHistory}}" wx:key="id" bindtap="onViewDetail" data-id="{{item.id}}">
+        <view class="record-icon"><view class="icon-line"></view><view class="icon-line short"></view><view class="icon-line"></view></view>
+        <view class="record-copy">
+          <view class="record-date-line">
+            <text class="record-date">{{item.displayDate}}</text>
+            <text class="record-time number-font">{{item.displayTime}}</text>
+          </view>
+          <text class="record-meta number-font">{{item.plateCount}} 碟 · {{item.peopleLabel}}</text>
+        </view>
+        <text class="record-amount number-font">¥{{item.totalAmount}}</text>
+        <text class="record-arrow" wx:if="{{!managing}}">›</text>
+        <view class="delete-button" wx:else catchtap="onDeleteItem" data-id="{{item.id}}" role="button" aria-label="删除{{item.displayDate}}的记录">删除</view>
+      </view>
+    </view>
+
+    <button class="show-all" wx:if="{{history.length > 3}}" bindtap="onToggleAll">{{showAll ? '收起记录' : '查看全部记录'}} <text class="show-all-arrow">›</text></button>
+    <view class="content-spacer"></view>
+  </scroll-view>
+
+</view>
+
+<view class="receipt-modal {{receiptVisible ? 'is-visible' : ''}}" wx:if="{{selectedReceipt}}" style="height: {{receiptViewportHeight}}px;" bindtap="onCloseReceipt">
+  <view class="receipt-dialog" style="height: {{receiptDialogHeight}}px;" catchtap="onStopPropagation">
+    <view class="modal-heading">
+      <text>消费小票</text>
+      <view class="modal-close" bindtap="onCloseReceipt" role="button" aria-label="关闭小票">×</view>
+    </view>
+    <scroll-view class="modal-scroll" scroll-y show-scrollbar="{{false}}">
+      <view class="receipt-paper">
+        <view class="receipt-header">
+          <text class="receipt-title">寿司郎消费小票</text>
+          <text class="receipt-muted number-font">{{selectedDate}}　{{selectedTime}}</text>
+          <text class="receipt-muted number-font">单号：{{selectedReceipt.id}}</text>
+        </view>
+        <view class="receipt-rule"></view>
+        <text class="receipt-section-title">消费明细</text>
+        <view class="receipt-item" wx:for="{{selectedReceipt.plates}}" wx:key="label">
+          <text class="receipt-name">{{item.label}}</text><text class="receipt-detail number-font">¥{{item.price}} × {{item.count}}</text><text class="receipt-value number-font">¥{{item.subtotal}}</text>
+        </view>
+        <view class="receipt-item" wx:for="{{selectedReceipt.customItems}}" wx:key="id">
+          <text class="receipt-name">{{item.name}}</text><text class="receipt-detail number-font">¥{{item.price}} × {{item.count}}</text><text class="receipt-value number-font">¥{{item.subtotal}}</text>
+        </view>
+        <view class="receipt-rule"></view>
+        <view class="receipt-summary"><text>碟子小计</text><text class="number-font">¥{{selectedReceipt.plateAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{selectedReceipt.customAmount > 0}}"><text>单点小计</text><text class="number-font">¥{{selectedReceipt.customAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{selectedReceipt.useDiscount}}"><text>88折优惠</text><text class="discount-value number-font">-¥{{selectedReceipt.discountAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{selectedReceipt.useServiceFee}}"><text>服务费（{{selectedReceipt.peopleCount}}人）</text><text class="number-font">+¥{{selectedReceipt.serviceFeeTotal}}</text></view>
+        <view class="receipt-rule strong"></view>
+        <view class="receipt-total"><text>合计</text><text class="number-font">¥{{selectedReceipt.totalAmount}}</text></view>
+        <view class="receipt-info" wx:if="{{selectedReceipt.peopleCount > 0}}"><text>人数 {{selectedReceipt.peopleCount}}人</text><text class="number-font">人均 ¥{{selectedReceipt.perCapita}}</text></view>
+        <text class="receipt-thanks">谢谢惠顾，欢迎再次光临</text>
+      </view>
+    </scroll-view>
+    <view class="receipt-actions">
+      <button class="receipt-button secondary" bindtap="onDeleteReceipt">删除记录</button>
+      <button class="receipt-button primary" bindtap="onExportReceipt" disabled="{{exportingReceipt}}">{{exportingReceipt ? '生成中…' : '保存小票图片'}}</button>
+    </view>
+  </view>
+</view>
+<canvas type="2d" id="receiptExportCanvas" class="export-canvas"></canvas>

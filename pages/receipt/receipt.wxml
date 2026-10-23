@@ -1,0 +1,52 @@
+<view class="page" wx:if="{{receipt}}">
+  <view class="top-safe" style="height: {{headerSafeHeight}}px;"></view>
+  <view class="nav-bar">
+    <view class="back-button" bindtap="onBack" role="button" aria-label="返回"><text class="back-glyph">‹</text></view>
+    <text class="nav-title">消费小票</text>
+    <button class="more-button" bindtap="onMore">更多</button>
+  </view>
+
+  <scroll-view class="content" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="receipt-paper">
+      <view class="tear-edge top-edge"></view>
+      <view class="receipt-header">
+        <text class="receipt-title">寿司郎消费小票</text>
+        <text class="receipt-muted number-font">{{displayDate}}　{{displayTime}}</text>
+        <text class="receipt-muted number-font">单号：{{receipt.id}}</text>
+      </view>
+
+      <view class="receipt-rule"></view>
+      <text class="section-title">消费明细</text>
+      <view class="item-row" wx:for="{{receipt.plates}}" wx:key="label">
+        <text class="item-name">{{item.label}}</text>
+        <text class="item-detail number-font">¥{{item.price}} × {{item.count}}</text>
+        <text class="item-value number-font">¥{{item.subtotal}}</text>
+      </view>
+      <view class="item-row" wx:for="{{receipt.customItems}}" wx:key="id">
+        <text class="item-name">{{item.name}}</text>
+        <text class="item-detail number-font">¥{{item.price}} × {{item.count}}</text>
+        <text class="item-value number-font">¥{{item.subtotal}}</text>
+      </view>
+
+      <view class="receipt-rule"></view>
+      <view class="summary-row"><text>碟子小计</text><text class="number-font">¥{{receipt.plateAmount}}</text></view>
+      <view class="summary-row" wx:if="{{receipt.customAmount > 0}}"><text>单点小计</text><text class="number-font">¥{{receipt.customAmount}}</text></view>
+      <view class="summary-row" wx:if="{{receipt.useDiscount}}"><text>88折优惠</text><text class="discount-value number-font">-¥{{receipt.discountAmount}}</text></view>
+      <view class="summary-row" wx:if="{{receipt.useServiceFee}}"><text>服务费（{{receipt.peopleCount}}人）</text><text class="number-font">+¥{{receipt.serviceFeeTotal}}</text></view>
+
+      <view class="receipt-rule strong"></view>
+      <view class="total-row"><text>合计</text><text class="number-font">¥{{receipt.totalAmount}}</text></view>
+      <view class="people-row" wx:if="{{receipt.peopleCount > 0}}"><text>人数 <text class="number-font">{{receipt.peopleCount}}</text>人</text><text>人均 <text class="number-font">¥{{receipt.perCapita}}</text></text></view>
+      <text class="thanks">谢谢惠顾，欢迎再次光临</text>
+      <view class="tear-edge bottom-edge"></view>
+    </view>
+
+    <view class="actions">
+      <button class="action-button secondary" bindtap="confirmDelete">删除记录</button>
+      <button class="action-button primary" bindtap="onExportReceipt" disabled="{{exportingReceipt}}">{{exportingReceipt ? '生成中…' : '保存小票图片'}}</button>
+    </view>
+    <text class="save-hint">图片会保存到系统相册，票据四周为透明背景。</text>
+    <view class="content-spacer"></view>
+  </scroll-view>
+</view>
+<canvas type="2d" id="receiptExportCanvas" class="export-canvas"></canvas>

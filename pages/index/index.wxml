@@ -1,0 +1,131 @@
+<view class="page">
+  <view class="top-safe" style="height: {{headerSafeHeight}}px;"></view>
+  <view class="page-header">
+    <text class="page-title">寿司吃郎计算器</text>
+    <view class="header-actions">
+      <view class="quiet-button header-action" bindtap="onReset" role="button" aria-label="重置">重置</view>
+      <view class="header-checkout-button header-action" bindtap="onCheckout" role="button" aria-label="结算" aria-disabled="{{showReceipt}}">结算</view>
+    </view>
+  </view>
+
+  <view class="summary-shell">
+    <view class="summary-panel">
+      <view class="summary-total">
+        <text class="summary-label">本餐合计</text>
+        <text class="summary-amount number-font">¥{{totalAmount}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <text class="summary-meta number-font">{{totalPlateCount}} 碟 · {{peopleCount || 0}} 人 · 人均 ¥{{perCapita}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="content" scroll-y enhanced show-scrollbar="{{false}}" enable-back-to-top>
+    <view class="section-heading">选择碟子</view>
+    <view class="plate-list">
+      <view class="plate-row" wx:for="{{plates}}" wx:key="label">
+        <view class="plate-disc" style="background-color: {{item.color}};"></view>
+        <view class="plate-copy">
+          <text class="plate-name">{{item.label}}</text>
+          <text class="plate-price number-font">¥{{item.price}}</text>
+        </view>
+        <view class="stepper">
+          <view class="step-button minus" bindtap="onPlateMinus" data-index="{{index}}" role="button" aria-label="减少{{item.label}}">−</view>
+          <input class="step-count number-font" type="number" value="{{item.count}}" bindinput="onPlateInput" data-index="{{index}}" aria-label="{{item.label}}数量" />
+          <view class="step-button plus" bindtap="onPlatePlus" data-index="{{index}}" role="button" aria-label="增加{{item.label}}">＋</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-heading options-heading">优惠与费用</view>
+    <view class="option-grid">
+      <view class="option-card {{useDiscount ? 'selected' : ''}}" bindtap="onToggleDiscountTap" role="checkbox" aria-checked="{{useDiscount}}">
+        <view class="check-control"><text wx:if="{{useDiscount}}">✓</text></view>
+        <text><text class="number-font">88</text>折优惠</text>
+      </view>
+      <view class="option-card {{useServiceFee ? 'selected' : ''}}" bindtap="onToggleServiceFeeTap" role="checkbox" aria-checked="{{useServiceFee}}">
+        <view class="check-control"><text wx:if="{{useServiceFee}}">✓</text></view>
+        <text>服务费 <text class="number-font">¥5/人</text></text>
+      </view>
+    </view>
+
+    <view class="people-row">
+      <view class="people-copy">
+        <text class="people-label">用餐人数</text>
+        <view class="fee-summary-row" wx:if="{{useDiscount || (useServiceFee && serviceFeeTotal > 0)}}">
+          <text class="discount-line" wx:if="{{useDiscount}}">优惠 <text class="number-font">-¥{{discountAmount}}</text></text>
+          <text class="discount-line" wx:if="{{useServiceFee && serviceFeeTotal > 0}}">服务费 <text class="number-font">+¥{{serviceFeeTotal}}</text></text>
+        </view>
+      </view>
+      <view class="stepper people-stepper">
+        <view class="step-button minus" bindtap="onPeopleMinus" role="button" aria-label="减少人数">−</view>
+        <text class="people-count number-font">{{peopleCount || 0}}人</text>
+        <view class="step-button plus" bindtap="onPeoplePlus" role="button" aria-label="增加人数">＋</view>
+      </view>
+    </view>
+
+    <view class="custom-section" wx:if="{{customItems.length > 0}}">
+      <view class="custom-header">
+        <text class="section-heading custom-heading">单点明细</text>
+        <text class="custom-total number-font">¥{{customAmount}}</text>
+      </view>
+      <view class="custom-row" wx:for="{{customItems}}" wx:key="id">
+        <view class="custom-fields">
+          <input class="custom-name" placeholder="菜品名称" placeholder-class="placeholder" value="{{item.name}}" data-id="{{item.id}}" data-field="name" bindinput="onCustomChange" />
+          <input class="custom-price number-font" type="digit" placeholder="单价" placeholder-class="placeholder" value="{{item.price}}" data-id="{{item.id}}" data-field="price" bindinput="onCustomChange" />
+        </view>
+        <view class="custom-actions">
+          <view class="mini-step" bindtap="onCustomMinus" data-id="{{item.id}}">−</view>
+          <input class="custom-count number-font" type="number" value="{{item.count}}" data-id="{{item.id}}" bindinput="onCustomCountChange" />
+          <view class="mini-step plus-mini" bindtap="onCustomPlus" data-id="{{item.id}}">＋</view>
+          <text class="custom-subtotal number-font">¥{{item.subtotal}}</text>
+          <text class="remove-item" bindtap="onRemoveCustomItem" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="add-item-button" bindtap="onAddCustomItem"><view class="button-content"><text class="add-symbol">＋</text><text>添加单点</text></view></button>
+    <view class="content-spacer"></view>
+  </scroll-view>
+
+  <view class="undo-reset" wx:if="{{showUndoReset}}">
+    <text>已重置本餐</text>
+    <view class="undo-reset-action" bindtap="onUndoReset" role="button" aria-label="恢复刚才的本餐">恢复</view>
+  </view>
+</view>
+
+<view class="receipt-modal {{receiptVisible ? 'is-visible' : ''}}" wx:if="{{showReceipt}}" style="height: {{receiptViewportHeight}}px;" bindtap="onCloseReceipt">
+    <view class="receipt-dialog" catchtap="onStopPropagation">
+      <scroll-view class="receipt-paper" style="height: {{receiptPaperHeight}}px;" scroll-y show-scrollbar="{{false}}">
+        <view class="receipt-header">
+          <text class="receipt-title">寿司郎消费小票</text>
+          <text class="receipt-muted number-font">{{receiptData.date}}　{{receiptData.time}}</text>
+          <text class="receipt-muted number-font">单号：{{receiptData.id}}</text>
+        </view>
+        <view class="receipt-rule"></view>
+        <text class="receipt-section-title">消费明细</text>
+        <view class="receipt-item" wx:for="{{receiptData.plates}}" wx:key="label">
+          <text>{{item.label}}</text>
+          <text class="receipt-detail number-font">¥{{item.price}} × {{item.count}}</text>
+          <text class="receipt-value number-font">¥{{item.subtotal}}</text>
+        </view>
+        <view class="receipt-item" wx:for="{{receiptData.customItems}}" wx:key="id">
+          <text>{{item.name}}</text>
+          <text class="receipt-detail number-font">¥{{item.price}} × {{item.count}}</text>
+          <text class="receipt-value number-font">¥{{item.subtotal}}</text>
+        </view>
+        <view class="receipt-rule"></view>
+        <view class="receipt-summary"><text>碟子小计</text><text class="number-font">¥{{receiptData.plateAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{receiptData.customAmount > 0}}"><text>单点小计</text><text class="number-font">¥{{receiptData.customAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{receiptData.useDiscount}}"><text>88折优惠</text><text class="discount-value number-font">-¥{{receiptData.discountAmount}}</text></view>
+        <view class="receipt-summary" wx:if="{{receiptData.useServiceFee}}"><text>服务费（{{receiptData.peopleCount}}人）</text><text class="number-font">+¥{{receiptData.serviceFeeTotal}}</text></view>
+        <view class="receipt-rule strong"></view>
+        <view class="receipt-total"><text>合计</text><text class="number-font">¥{{receiptData.totalAmount}}</text></view>
+        <view class="receipt-info" wx:if="{{receiptData.peopleCount > 0}}"><text>人数 {{receiptData.peopleCount}}人</text><text class="number-font">人均 ¥{{receiptData.perCapita}}</text></view>
+        <text class="receipt-thanks">谢谢惠顾，欢迎再次光临</text>
+      </scroll-view>
+      <view class="receipt-actions">
+        <button class="receipt-button secondary" bindtap="onCloseReceipt">返回修改</button>
+        <button class="receipt-button primary" bindtap="onSaveReceipt">保存小票</button>
+      </view>
+    </view>
+</view>

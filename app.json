@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/settings/settings",
+    "pages/history/history",
+    "pages/analytics/analytics",
+    "pages/receipt/receipt"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "custom": false,
+    "color": "#8a8f98",
+    "selectedColor": "#d71920",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "", "iconPath": "计算.png", "selectedIconPath": "计算-选中.png" },
+      { "pagePath": "pages/history/history", "text": "", "iconPath": "历史.png", "selectedIconPath": "历史-选中.png" },
+      { "pagePath": "pages/analytics/analytics", "text": "", "iconPath": "分析.png", "selectedIconPath": "分析-选中.png" }
+    ]
+  },
+  "style": "v2",
+  "renderer": "skyline",
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "defaultContentBox": true,
+      "disableABTest": true,
+      "sdkVersionBegin": "3.0.0",
+      "sdkVersionEnd": "15.255.255"
+    }
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

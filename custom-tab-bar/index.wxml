@@ -1,0 +1,11 @@
+<view class="tabs" role="tablist" aria-label="主要页面">
+  <view class="tab {{current === 'calculator' ? 'active' : ''}}" data-key="calculator" bindtap="onSelect" role="tab" aria-label="计算" aria-selected="{{current === 'calculator'}}">
+    <image class="tab-icon" src="/计算.png" mode="aspectFit" aria-hidden="true" />
+  </view>
+  <view class="tab {{current === 'history' ? 'active' : ''}}" data-key="history" bindtap="onSelect" role="tab" aria-label="历史" aria-selected="{{current === 'history'}}">
+    <image class="tab-icon" src="/历史.png" mode="aspectFit" aria-hidden="true" />
+  </view>
+  <view class="tab {{current === 'analytics' ? 'active' : ''}}" data-key="analytics" bindtap="onSelect" role="tab" aria-label="分析" aria-selected="{{current === 'analytics'}}">
+    <image class="tab-icon" src="/分析.png" mode="aspectFit" aria-hidden="true" />
+  </view>
+</view>

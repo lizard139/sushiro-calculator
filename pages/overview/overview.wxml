@@ -1,0 +1,47 @@
+<!-- 吃郎概览页面 -->
+<view class="page">
+  <navigator class="page-back" open-type="navigateBack" delta="1" aria-role="button" aria-label="返回计算器">
+    <text class="page-back-icon">‹</text>
+  </navigator>
+  <view class="hero-section">
+    <view class="hero-title">看看你吃了多少郎？</view>
+    <view class="hero-subtitle">记录每一次美味时刻</view>
+  </view>
+
+  <view class="menu-container">
+    <view class="menu-card" bindtap="onGoToTickets">
+      <view class="card-icon">🎫</view>
+      <view class="card-content">
+        <view class="card-title">吃郎小票</view>
+        <view class="card-desc">查看所有消费记录</view>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+
+    <view class="menu-card" bindtap="onGoToAnalytics">
+      <view class="card-icon">📊</view>
+      <view class="card-content">
+        <view class="card-title">吃郎分析</view>
+        <view class="card-desc">消费数据可视化分析</view>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 快速统计 -->
+  <view class="quick-stats">
+    <view class="stat-card">
+      <view class="stat-number">{{totalRecords}}</view>
+      <view class="stat-label">消费次数</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-number">¥{{totalSpent}}</view>
+      <view class="stat-label">累计消费</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-number">¥{{avgSpent}}</view>
+      <view class="stat-label">平均消费</view>
+    </view>
+  </view>
+</view>
+
